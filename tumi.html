@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>পশ্চিমবঙ্গ গ্রাম পঞ্চায়েত পরীক্ষা ২০২৬ - প্রো মক টেস্ট</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --unattempted: #06b6d4;
+            --bg-dark: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: #333;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #f8fafc;
+            z-index: 10;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* লগইন স্ক্রিন */
+        #login-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f172a, #0284c7);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .login-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-top: 5px solid var(--primary);
+        }
+
+        .login-card h2 {
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 22px;
+        }
+
+        .login-card p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 13px;
+            color: #444;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .photo-preview-box {
+            width: 100%;
+            height: 140px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #cbd5e1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-photo-select {
+            background: #e2e8f0;
+            color: #334155;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .landscape-tip {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #bae6fd;
+        }
+
+        /* পরীক্ষা লেআউট হেডার */
+        .exam-header {
+            background: var(--primary);
+            color: white;
+            padding: 0 10px;
+            height: 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0369a1;
+            flex-shrink: 0;
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .candidate-info img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .timer-box {
+            background: var(--danger);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .exam-body {
+            display: flex;
+            flex: 1;
+            height: calc(100% - 45px);
+            overflow: hidden;
+        }
+
+        .exam-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-right: 1px solid #e2e8f0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .groups-bar {
+            background: #f8fafc;
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .group-btn {
+            padding: 5px 12px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .group-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .question-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .q-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #0f172a;
+            line-height: 1.4;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .option-label input {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* ফুটার নেভিগেশন বাটন বার ফিক্সড */
+        .exam-footer-nav {
+            padding: 10px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 5px;
+        }
+
+        .footer-left-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            padding: 8px 10px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+        }
+
+        /* প্রশ্ন প্যালেট সাইডবার */
+        .exam-sidebar {
+            width: 190px;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .palette-header {
+            background: #e2e8f0;
+            padding: 6px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 11px;
+            border-bottom: 1px solid #cbd5e1;
+            color: #1e293b;
+            flex-shrink: 0;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            padding: 4px;
+            font-size: 8px;
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #475569;
+        }
+
+        .legend-box {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            color: white;
+            text-align: center;
+            font-size: 7px;
+            line-height: 10px;
+            font-weight: bold;
+        }
+
+        .palette-grid {
+            padding: 6px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            overflow-y: auto;
+            flex: 1;
+            align-content: start;
+        }
+
+        .q-badge {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            font-size: 10px;
+        }
+
+        .q-badge.not-visited { background: #fff; color: #333; }
+        .q-badge.not-answered { background: var(--danger); color: white; border-color: #b91c1c; }
+        .q-badge.answered { background: var(--success); color: white; border-color: #15803d; }
+        .q-badge.marked { background: #7c3aed; color: white; }
+
+        .submit-container {
+            padding: 6px;
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* ভেরিফিকেশন মডাল */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* রেজাল্ট স্ক্রিন */
+        #result-screen {
+            padding: 15px;
+            overflow-y: auto;
+            background: #f1f5f9;
+            align-items: center;
+        }
+
+        .result-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .top-nav-bar {
+            background: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stats-grid-top {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        .stat-num {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .donut-chart-box {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .donut-hole {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .section-stats-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .candidate-result-photos {
+            display: flex;
+            gap: 10px;
+        }
+
+        .candidate-result-photos img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .marks-badge {
+            background: #e0f2fe;
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .solutions-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-top: 5px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .filter-btn.active {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
+        .solution-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        .solution-card.correct { border-left: 5px solid var(--success); }
+        .solution-card.incorrect { border-left: 5px solid var(--danger); }
+        .solution-card.unattempted { border-left: 5px solid var(--unattempted); }
+
+        .sol-q-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .sol-ans-row {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .btn-restart-app {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ১. লগইন স্ক্রিন -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <h2>পশ্চিমবঙ্গ গ্রাম পঞ্চায়েত পরীক্ষা ২০২৬</h2>
+            <p>প্রিমিয়াম অনলাইন মক টেস্ট পোর্টাল</p>
+            <div class="landscape-tip">📱 সেরা অভিজ্ঞতা পেতে মোবাইলটি ল্যান্ডস্কেপ (কাত) করে নিন।</div>
+
+            <div class="form-group">
+                <label>আপনার নাম লিখুন:</label>
+                <input type="text" id="candidate-name-input" class="form-control" placeholder="নাম লিখুন..." value="শাহরুখ শেখ">
+            </div>
+
+            <div class="form-group">
+                <label>আপনার ছবি আপলোড / তুলুন:</label>
+                <div class="photo-preview-box">
+                    <p id="start-placeholder" style="font-size: 13px; color: #64748b;">কোনো ছবি নির্বাচন করা হয়নি</p>
+                    <img id="start-photo-preview" style="display:none;" alt="Start Photo">
+                </div>
+                <input type="file" id="start-file-input" accept="image/*" style="display:none;" onchange="handleFileSelect(event, 'start')">
+                <button class="btn-photo-select" onclick="document.getElementById('start-file-input').click()">📷 ছবি যোগ করুন</button>
+            </div>
+
+            <button class="btn-start" onclick="startExamProcess()">পরীক্ষা শুরু করুন</button>
+        </div>
+    </div>
+
+    <!-- ২. মূল পরীক্ষা স্ক্রিন -->
+    <div id="exam-screen" class="screen">
+        <header class="exam-header">
+            <div class="candidate-info">
+                <img id="candidate-photo-display" src="" alt="Candidate">
+                <div>
+                    <h4 id="display-name" style="font-size: 12px; color: white;">পরীক্ষার্থী</h4>
+                    <p style="font-size: 9px; color: #bae6fd;">WBGP-2026-MOCK</p>
+                </div>
+            </div>
+            <h3 style="font-size: 12px; color: #fff;">গ্রাম পঞ্চায়েত পরীক্ষা মক টেস্ট</h3>
+            <div class="timer-box" id="timer">৬০:০০</div>
+        </header>
+
+        <div class="exam-body">
+            <div class="exam-main">
+                <div class="groups-bar" id="groups-bar"></div>
+                <div class="question-container" id="question-container"></div>
+                
+                <!-- ফুটার নেভিগেশন বাটন বার (এখন একদম নিখুঁতভাবে নিচে স্ক্রিনের মধ্যে থাকবে) -->
+                <div class="exam-footer-nav">
+                    <div class="footer-left-btns">
+                        <button class="action-btn" onclick="markForReview()">Review</button>
+                        <button class="action-btn" onclick="clearResponse()">Clear</button>
+                    </div>
+                    <button class="action-btn btn-save" onclick="saveAndNext()">Save & Next</button>
+                </div>
+            </div>
+
+            <div class="exam-sidebar">
+                <div class="palette-header" id="palette-header-title">প্রশ্ন প্যালেট (Group A)</div>
+                <div class="legend-grid">
+                    <div class="legend-item"><div class="legend-box" style="background:var(--success)">প</div> উত্তর</div>
+                    <div class="legend-item"><div class="legend-box" style="background:var(--danger)">প</div> বাকি</div>
+                    <div class="legend-item"><div class="legend-box" style="background:#7c3aed">প</div> রিভিউ</div>
+                    <div class="legend-item"><div class="legend-box" style="background:#fff; color:#333; border:1px solid #ccc">প</div> দেখা</div>
+                </div>
+                <div class="palette-grid" id="palette-grid"></div>
+                <div class="submit-container">
+                    <button class="btn-submit" onclick="openVerificationModal()">সাবমিট করুন</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ২য় ছবি যাচাইকরণ মডাল -->
+    <div id="verification-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="color:var(--primary); margin-bottom: 8px;">পরীক্ষার্থী যাচাইকরণ</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">রেজাল্ট দেখতে হলে আপনার দ্বিতীয়বার যাচাইকরণ ছবি দিন:</p>
+            
+            <div class="photo-preview-box" style="height: 130px; margin-bottom: 10px;">
+                <p id="verify-placeholder" style="font-size: 13px; color: #64748b;">ছবি নির্বাচন করা হয়নি</p>
+                <img id="verify-photo-preview" style="display:none;" alt="Verify Photo">
+            </div>
+
+            <input type="file" id="verify-file-input" accept="image/*" style="display:none;" onchange="handleFileSelect(event, 'verify')">
+            <button class="btn-photo-select" onclick="document.getElementById('verify-file-input').click()">📷 ২য় ছবি যোগ করুন</button>
+            <button class="btn-start" style="margin-top: 5px;" onclick="finishAndShowResult()">ফাইনাল রেজাল্ট দেখুন</button>
+        </div>
+    </div>
+
+    <!-- ৩. অ্যাপ স্টাইল রেজাল্ট স্ক্রিন -->
+    <div id="result-screen" class="screen">
+        <div style="width: 100%; height: 100%; overflow-y: auto; display: flex; justify-content: center; padding: 15px;">
+            <div class="result-container">
+                <div class="top-nav-bar">
+                    <span style="cursor: pointer;" onclick="location.reload()">←</span>
+                    <span id="result-page-title">গ্রাম পঞ্চায়েত পরীক্ষা ২০২৬</span>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-grid-top">
+                        <div class="stat-item">
+                            <div style="color:var(--success); font-weight:bold;">✔</div>
+                            <div class="stat-num" id="stat-correct-count" style="color:var(--success);">0</div>
+                            <div class="stat-label">Correct</div>
+                        </div>
+                        <div class="stat-item">
+                            <div style="color:var(--danger); font-weight:bold;">✖</div>
+                            <div class="stat-num" id="stat-incorrect-count" style="color:var(--danger);">0</div>
+                            <div class="stat-label">Incorrect</div>
+                        </div>
+                        <div class="stat-item">
+                            <div style="color:var(--unattempted); font-weight:bold;">➖</div>
+                            <div class="stat-num" id="stat-unattempted-count" style="color:var(--unattempted);">0</div>
+                            <div class="stat-label">Unattempted</div>
+                        </div>
+                    </div>
+
+                    <div class="donut-chart-box" id="donut-chart-element">
+                        <div class="donut-hole"></div>
+                    </div>
+
+                    <div class="chart-legend">
+                        <div><span class="legend-dot" style="background:var(--success);"></span>Correct</div>
+                        <div><span class="legend-dot" style="background:var(--danger);"></span>Incorrect</div>
+                        <div><span class="legend-dot" style="background:var(--unattempted);"></span>Unattempted</div>
+                    </div>
+                </div>
+
+                <div class="section-stats-card">
+                    <div class="candidate-result-photos">
+                        <div>
+                            <img id="photo-start" src="" alt="Start">
+                            <div style="font-size: 9px; text-align: center; color: #64748b;">১ম ছবি</div>
+                        </div>
+                        <div>
+                            <img id="photo-verify" src="" alt="Verify">
+                            <div style="font-size: 9px; text-align: center; color: #64748b;">২য় ছবি</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #64748b; text-align: right;">Marks Obtained</div>
+                        <div class="marks-badge" id="res-score">0.00</div>
+                    </div>
+                </div>
+
+                <div class="solutions-header">Solutions</div>
+                <div class="filter-tabs">
+                    <button class="filter-btn active" onclick="filterSolutions('all', this)">All</button>
+                    <button class="filter-btn" onclick="filterSolutions('correct', this)">Correct</button>
+                    <button class="filter-btn" onclick="filterSolutions('incorrect', this)">Incorrect</button>
+                    <button class="filter-btn" onclick="filterSolutions('unattempted', this)">Unattempted</button>
+                </div>
+
+                <div id="solutions-list-container"></div>
+
+                <button class="btn-restart-app" onclick="location.reload()">পুনরায় পরীক্ষা দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { id: 1, group: "Group A", q: "আয়তনের দিক থেকে পশ্চিমবঙ্গের বৃহত্তম জেলা কোনটি?", options: ["উত্তর ২৪ পরগনা", "দক্ষিণ ২৪ পরগনা", "বর্ধমান", "জলপাইগুড়ি"], ans: 1 },
+            { id: 2, group: "Group A", q: "আয়তনের বিচারে পশ্চিমবঙ্গের ক্ষুদ্রতম জেলা কোনটি?", options: ["কলকাতা", "কালিম্পং", "হাওড়া", "আলিপুরদুয়ার"], ans: 0 },
+            { id: 3, group: "Group A", q: "পশ্চিমবঙ্গের রাষ্ট্রীয় পশু (State Animal) কোনটি?", options: ["রয়্যাল বেঙ্গল টাইগার", "মেছো বিড়াল (Fishing Cat)", "একশৃঙ্গ গণ্ডার", "হাতি"], ans: 1 },
+            { id: 4, group: "Group A", q: "পশ্চিমবঙ্গের রাষ্ট্রীয় পাখি কোনটি?", options: ["দোয়েল", "ময়ূর", "শ্বেতকণ্ঠ মাছরাঙা", "কোকিল"], ans: 2 },
+            { id: 5, group: "Group A", q: "পশ্চিমবঙ্গের রাষ্ট্রীয় ফুল কোনটি?", options: ["পদ্ম", "শিউলি", "পলাশ", "গোলাপ"], ans: 1 },
+            { id: 6, group: "Group A", q: "পশ্চিমবঙ্গের সাথে কয়টি প্রতিবেশী দেশের সীমানা যুক্ত রয়েছে?", options: ["২টি", "৩টি", "৪টি", "৫টি"], ans: 1 },
+            { id: 7, group: "Group A", q: "পশ্চিমবঙ্গের সাথে কোন প্রতিবেশী দেশের সীমানা সবচেয়ে দীর্ঘ?", options: ["নেপাল", "ভুটান", "বাংলাদেশ", "চীন"], ans: 2 },
+            { id: 8, group: "Group A", q: "কোচবিহার রাজ্যটি কত সালে পশ্চিমবঙ্গের একটি জেলা হিসেবে আত্মপ্রকাশ করে?", options: ["১৯৪৭ সালে", "১৯৪৮ সালে", "১৯৫০ সালে", "১৯৫২ সালে"], ans: 2 },
+            { id: 9, group: "Group A", q: "পশ্চিমবঙ্গের কোন জেলায় স্ত্রী-पुरुषের অনুপাত সবচেয়ে বেশি?", options: ["কলকাতা", "দার্জিলিং", "হুগলী", "পশ্চিম মেদিনীপুর"], ans: 1 },
+            { id: 10, group: "Group A", q: "ভারতের সংবিধানের কোন অনুচ্ছেদে গ্রাম পঞ্চায়েত গঠনের কথা বলা হয়েছে?", options: ["অনুচ্ছেদ ৪০", "অনুচ্ছেদ ৮৮", "অনুচ্ছেদ ৩২", "অনুচ্ছেদ ৫১এ"], ans: 0 }
+        ];
+
+        const bankPool = [
+            { q: "ভারতের প্রথম প্রধানমন্ত্রী কে ছিলেন?", options: ["জওহরলাল নেহরু", "সর্দার প্যাটেল", "ড. বি আর আম্বেদকর", "মহাত্মা গান্ধী"], ans: 0 },
+            { q: "ভারতের জাতীয় পতাকার দৈর্ঘ্য ও প্রস্থের অনুপাত কত?", options: ["৩:২", "২:৩", "৪:৩", "১:১"], ans: 0 },
+            { q: "পশ্চিমবঙ্গে কতগুলি জেলা রয়েছে?", options: ["২৩টি", "২৪টি", "২৫টি", "২২টি"], ans: 0 },
+            { q: "ভারতের দীর্ঘতম নদী কোনটি?", options: ["ব্রহ্মপুত্র", "গঙ্গা", "যমুনা", "নর্মদা"], ans: 1 },
+            { q: "কোন গ্রহকে লাল গ্রহ বলা হয়?", options: ["বুধ", "শুক্র", "মঙ্গল", "শনি"], ans: 2 },
+            { q: "ভারতের সংবিধান কবে গৃহিত হয়েছিল?", options: ["১৯৫০ সালের ২৬ জানুয়ারি", "১৯৪৯ সালের ২৬ নভেম্বর", "১৯৪৭ সালের ১৫ আগস্ট", "১৯৫০ সালের ১৫ আগস্ট"], ans: 1 },
+            { q: "বিশ্ব পরিবেশ দিবস কবে পালিত হয়?", options: ["৫ই জুন", "৮ই মার্চ", "২২শে এপ্রিল", "১লা মে"], ans: 0 },
+            { q: "মানুষের শরীরে মোট হাড়ের সংখ্যা কত?", options: ["২০৬টি", "২১০টি", "১৯৮টি", "২২০টি"], ans: 0 },
+            { q: "পশ্চিমবঙ্গের সর্বোচ্চ শৃঙ্গ কোনটি?", options: ["সান্দাকফু", "ফালুট", "সাবরুম", "টাইগার হিল"], ans: 0 },
+            { q: "ভারতের জাতীয় সংগীতের রচিয়ত কে?", options: ["বঙ্কিমচন্দ্র চট্টোপাধ্যায়", "রবীন্দ্রনাথ ঠাকুর", "কাজী নজরুল ইসলাম", "রজনীকান্ত সেন"], ans: 1 }
+        ];
+
+        for(let i=11; i<=100; i++) {
+            let grp = i <= 25 ? "Group A" : (i <= 50 ? "Group B" : (i <= 75 ? "Group C" : "Group D"));
+            let poolItem = bankPool[(i - 11) % bankPool.length];
+            let dynamicAns = (i * 7) % 4;
+            
+            let currentOpts = [...poolItem.options];
+            let temp = currentOpts[0];
+            currentOpts[0] = currentOpts[dynamicAns];
+            currentOpts[dynamicAns] = temp;
+
+            questions.push({
+                id: i,
+                group: grp,
+                q: `(${i}) ${poolItem.q} (গ্রাম পঞ্চায়েত বিশেষ)`,
+                options: currentOpts,
+                ans: dynamicAns
+            });
+        }
+
+        let startPhotoSrc = "";
+        let verifyPhotoSrc = "";
+        let currentIdx = 0;
+        let currentGroup = "Group A";
+        let userAnswers = {};
+        let qStatus = {};
+        let timerInterval;
+        let timeLeft = 60 * 60;
+        let allSolutionItems = [];
+
+        function handleFileSelect(event, type) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if(type === 'start') {
+                        startPhotoSrc = e.target.result;
+                        document.getElementById('start-placeholder').style.display = 'none';
+                        const img = document.getElementById('start-photo-preview');
+                        img.src = startPhotoSrc;
+                        img.style.display = 'block';
+                    } else {
+                        verifyPhotoSrc = e.target.result;
+                        document.getElementById('verify-placeholder').style.display = 'none';
+                        const img = document.getElementById('verify-photo-preview');
+                        img.src = verifyPhotoSrc;
+                        img.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function startExamProcess() {
+            const name = document.getElementById('candidate-name-input').value.trim();
+            if(!name) {
+                alert("অনুগ্রহ করে আপনার নাম লিখুন!");
+                return;
+            }
+            if(!startPhotoSrc) {
+                alert("পরীক্ষা শুরু করার পূর্বে ছবি যোগ করুন!");
+                return;
+            }
+
+            document.getElementById('login-screen').classList.remove('active');
+            document.getElementById('exam-screen').classList.add('active');
+
+            document.getElementById('candidate-photo-display').src = startPhotoSrc;
+            document.getElementById('display-name').innerText = name;
+
+            initExam();
+        }
+
+        function initExam() {
+            questions.forEach((_, idx) => { qStatus[idx] = 'not-visited'; });
+            qStatus[0] = 'not-answered';
+
+            renderGroups();
+            renderQuestion(0);
+            renderPalette();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    openVerificationModal();
+                    return;
+                }
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                document.getElementById('timer').innerText = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
+            }, 1000);
+        }
+
+        function renderGroups() {
+            let groups = [...new Set(questions.map(q => q.group))];
+            let bar = document.getElementById('groups-bar');
+            bar.innerHTML = groups.map((g) => `
+                <button class="group-btn ${g === currentGroup ? 'active':''}" onclick="switchGroup('${g}')">${g}</button>
+            `).join('');
+        }
+
+        function switchGroup(groupName) {
+            currentGroup = groupName;
+            renderGroups();
+            let firstQInGroup = questions.findIndex(q => q.group === groupName);
+            if(firstQInGroup !== -1) {
+                renderQuestion(firstQInGroup);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            currentGroup = questions[idx].group;
+            renderGroups();
+
+            if(qStatus[idx] === 'not-visited') {
+                qStatus[idx] = 'not-answered';
+            }
+            renderPalette();
+
+            let q = questions[idx];
+            let container = document.getElementById('question-container');
+            let selectedOpt = userAnswers[idx] !== undefined ? userAnswers[idx] : -1;
+
+            container.innerHTML = `
+                <div class="q-title">প্রশ্ন ${idx + 1}. ${q.q}</div>
+                <div class="options-group">
+                    ${q.options.map((opt, oIdx) => `
+                        <label class="option-label">
+                            <input type="radio" name="option" value="${oIdx}" ${selectedOpt === oIdx ? 'checked':''} onchange="selectOption(${oIdx})">
+                            (${String.fromCharCode(97 + oIdx)}) ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIdx] = optIdx;
+            qStatus[currentIdx] = 'answered';
+            renderPalette();
+        }
+
+        function saveAndNext() {
+            if(currentIdx < questions.length - 1) {
+                renderQuestion(currentIdx + 1);
+            }
+        }
+
+        function markForReview() {
+            qStatus[currentIdx] = 'marked';
+            renderPalette();
+            if(currentIdx < questions.length - 1) {
+                renderQuestion(currentIdx + 1);
+            }
+        }
+
+        function clearResponse() {
+            delete userAnswers[currentIdx];
+            qStatus[currentIdx] = 'not-answered';
+            renderQuestion(currentIdx);
+        }
+
+        function renderPalette() {
+            let grid = document.getElementById('palette-grid');
+            document.getElementById('palette-header-title').innerText = `প্রশ্ন প্যালেট (${currentGroup})`;
+
+            let groupQuestions = questions.map((q, originalIdx) => ({...q, originalIdx})).filter(q => q.group === currentGroup);
+
+            grid.innerHTML = groupQuestions.map((q, displayNum) => {
+                let origIdx = q.originalIdx;
+                let statusClass = qStatus[origIdx];
+                let isCurrent = (origIdx === currentIdx);
+                let borderStyle = isCurrent ? 'border: 2px solid #000;' : '';
+
+                return `
+                    <div class="q-badge ${statusClass}" style="${borderStyle}" onclick="renderQuestion(${origIdx})">${displayNum + 1}</div>
+                `;
+            }).join('');
+        }
+
+        function openVerificationModal() {
+            document.getElementById('verification-modal').style.display = 'flex';
+        }
+
+        function finishAndShowResult() {
+            if(!verifyPhotoSrc) {
+                alert("ফাইনাল রেজাল্ট দেখতে হলে দ্বিতীয় ছবি যোগ করতে হবে!");
+                return;
+            }
+            document.getElementById('verification-modal').style.display = 'none';
+            submitExam();
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+
+            document.getElementById('photo-start').src = startPhotoSrc;
+            document.getElementById('photo-verify').src = verifyPhotoSrc;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unattemptedCount = 0;
+            allSolutionItems = [];
+
+            questions.forEach((q, idx) => {
+                let uAns = userAnswers[idx];
+                let status = '';
+                
+                if (uAns === undefined) {
+                    unattemptedCount++;
+                    status = 'unattempted';
+                } else if (uAns === q.ans) {
+                    correctCount++;
+                    status = 'correct';
+                } else {
+                    incorrectCount++;
+                    status = 'incorrect';
+                }
+
+                let answerText = uAns !== undefined ? q.options[uAns] : 'উত্তর দেওয়া হয়নি';
+                let correctText = q.options[q.ans];
+
+                let cardHtml = `
+                    <div class="solution-card ${status}" data-status="${status}">
+                        <div class="sol-q-title">প্রশ্ন ${idx + 1}: ${q.q}</div>
+                        <div class="sol-ans-row" style="color:${status === 'correct' ? 'var(--success)' : (status === 'incorrect' ? 'var(--danger)' : '#0284c7')}">
+                            আপনার উত্তর: ${answerText}
+                        </div>
+                        <div class="sol-ans-row" style="color:var(--success); font-weight:bold;">
+                            সঠিক উত্তর: ${correctText}
+                        </div>
+                    </div>
+                `;
+                allSolutionItems.push(cardHtml);
+            });
+
+            let score = (correctCount * 1.0) - (incorrectCount * 0.25);
+            if(score < 0) score = 0;
+
+            document.getElementById('stat-correct-count').innerText = correctCount;
+            document.getElementById('stat-incorrect-count').innerText = incorrectCount;
+            document.getElementById('stat-unattempted-count').innerText = unattemptedCount;
+            document.getElementById('res-score').innerText = score.toFixed(2);
+
+            let totalQ = questions.length;
+            let cDeg = (correctCount / totalQ) * 360;
+            let iDeg = cDeg + (incorrectCount / totalQ) * 360;
+            
+            document.getElementById('donut-chart-element').style.background = `conic-gradient(
+                var(--success) 0deg ${cDeg}deg,
+                var(--danger) ${cDeg}deg ${iDeg}deg,
+                var(--unattempted) ${iDeg}deg 360deg
+            )`;
+
+            document.getElementById('solutions-list-container').innerHTML = allSolutionItems.join('');
+        }
+
+        function filterSolutions(type, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            let cards = document.querySelectorAll('.solution-card');
+            cards.forEach(card => {
+                if(type === 'all' || card.getAttribute('data-status') === type) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
